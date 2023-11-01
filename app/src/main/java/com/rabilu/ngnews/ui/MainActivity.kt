@@ -8,13 +8,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.rabilu.ngnews.NavGraphs
+import androidx.navigation.compose.rememberNavController
+import com.rabilu.ngnews.ui.destinations.HomeScreenDestination
 import com.rabilu.ngnews.ui.theme.NGNewsTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,11 +24,19 @@ class MainActivity : ComponentActivity() {
         setContent {
             NGNewsTheme {
                 // A surface container using the 'background' color from the theme
+                val navController = rememberNavController()
+                val isFirstTimeOpen by remember {
+                    mutableStateOf(true)
+                }
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DestinationsNavHost(navGraph = NavGraphs.root)
+                    DestinationsNavHost(
+                        navGraph = NavGraphs.root,
+                        navController = navController
+                    )
                 }
             }
         }
@@ -34,8 +44,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-@Destination
-@RootNavGraph(start = true)
 fun Greeting() {
     Text(
         text = "Hello!",
