@@ -1,5 +1,6 @@
 package com.rabilu.ngnews.ui.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,6 +30,7 @@ import com.rabilu.ngnews.R
 import com.rabilu.ngnews.ui.common.MyButton
 import com.rabilu.ngnews.ui.common.MyTextField
 import com.rabilu.ngnews.ui.common.MyTextFieldProperties
+import com.rabilu.ngnews.ui.destinations.RegistrationScreenDestination
 import com.rabilu.ngnews.ui.theme.Black40
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -37,19 +38,13 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
 @Composable
 @Destination
-fun RegistrationScreen(
+fun LoginScreen(
     navigator: DestinationsNavigator
 ) {
     val userTextFieldProperties = MyTextFieldProperties(
         labelText = "User Name", keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text
         )
-    )
-    val emailTextFieldProperties = MyTextFieldProperties(
-        labelText = "Email", keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email
-        ),
-        leadingIcon = Icons.Outlined.Email
     )
     val passwordTextFieldProperties = MyTextFieldProperties(
         labelText = "Password", keyboardOptions = KeyboardOptions(
@@ -66,7 +61,7 @@ fun RegistrationScreen(
         ) {
             Text(
                 modifier = Modifier.padding(top = 32.dp),
-                text = "Sign Up", style = TextStyle(
+                text = "Sign In", style = TextStyle(
                     fontSize = 32.sp,
                     fontFamily = FontFamily(Font(R.font.times)),
                     fontWeight = FontWeight(700),
@@ -80,13 +75,11 @@ fun RegistrationScreen(
                 modifier = Modifier.padding(top = 32.dp),
                 properties = passwordTextFieldProperties
             )
-            MyTextField(
-                modifier = Modifier.padding(top = 32.dp),
-                properties = emailTextFieldProperties
-            )
             MyButton(
-                textLabel = "Sign Up", modifier = Modifier.padding(top = 32.dp),
+                textLabel = "Sign In", modifier = Modifier.padding(top = 32.dp),
             ) {
+                if (!userTextFieldProperties.text.isNullOrBlank())
+                    Toast.makeText(context, userTextFieldProperties.text, Toast.LENGTH_SHORT).show()
             }
 
             TextButton(
@@ -102,7 +95,7 @@ fun RegistrationScreen(
                         modifier = Modifier.padding(end = 16.dp)
                     )
                     Text(
-                        text = "Sign up with Google", style = TextStyle(
+                        text = "Sign in with Google", style = TextStyle(
                             fontSize = 16.sp,
                             fontFamily = FontFamily(Font(R.font.times)),
                             fontWeight = FontWeight(400),
@@ -125,7 +118,7 @@ fun RegistrationScreen(
                         modifier = Modifier.padding(end = 16.dp)
                     )
                     Text(
-                        text = "Sign up with Facebook", style = TextStyle(
+                        text = "Sign in with Facebook", style = TextStyle(
                             fontSize = 16.sp,
                             fontFamily = FontFamily(Font(R.font.times)),
                             fontWeight = FontWeight(400),
@@ -137,12 +130,10 @@ fun RegistrationScreen(
 
             TextButton(
                 modifier = Modifier.padding(top = 16.dp),
-                onClick = {
-                    navigator.navigateUp()
-                }
+                onClick = { navigator.navigate(RegistrationScreenDestination) }
             ) {
                 Text(
-                    text = "Already have an account? Sign In!",
+                    text = "Don’t have an account? Sign Up!",
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontFamily = FontFamily(Font(R.font.times)),
@@ -158,6 +149,6 @@ fun RegistrationScreen(
 
 @Preview
 @Composable
-fun RegistrationScreenPreview() {
-    RegistrationScreen(EmptyDestinationsNavigator)
+fun LoginScreenPreview() {
+    LoginScreen(EmptyDestinationsNavigator)
 }

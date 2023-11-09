@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.rabilu.ngnews.R
+import com.rabilu.ngnews.data.DataStoreManager
 import com.rabilu.ngnews.ui.common.MyButton
 import com.rabilu.ngnews.ui.destinations.HomeScreenDestination
 import com.rabilu.ngnews.ui.destinations.OnBoardingScreenFourDestination
@@ -38,6 +40,9 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
 
 //@Composable
@@ -345,8 +350,9 @@ fun OnBoardingScreenThree(
 @Composable
 @Destination
 fun OnBoardingScreenFour(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
 ) {
+    val context = LocalContext.current
     Surface {
         Box(modifier = Modifier.fillMaxSize()) {
             Box {
@@ -411,6 +417,9 @@ fun OnBoardingScreenFour(
                     navigator.popBackStack(OnBoardingScreenTwoDestination, true)
                     navigator.popBackStack(OnBoardingScreenThreeDestination, true)
                     navigator.navigate(HomeScreenDestination)
+                    CoroutineScope(IO).launch {
+                        DataStoreManager(context).updateLaunchStatus()
+                    }
                 }
             }
 

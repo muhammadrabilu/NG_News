@@ -73,6 +73,12 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation("androidx.compose.material:material-icons-extended:1.6.0-alpha08")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.2")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
     //navigation
     implementation("io.github.raamcosta.compose-destinations:core:$navVersion")
@@ -84,6 +90,11 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
 
     //hilt
-    implementation("com.google.dagger:hilt-android:2.46.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
 }
