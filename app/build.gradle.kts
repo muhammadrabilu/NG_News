@@ -77,8 +77,8 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.2")
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
     //navigation
     implementation("io.github.raamcosta.compose-destinations:core:$navVersion")
@@ -97,4 +97,11 @@ dependencies {
 
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     implementation("androidx.navigation:navigation-compose:2.7.5")
+
+    //image
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

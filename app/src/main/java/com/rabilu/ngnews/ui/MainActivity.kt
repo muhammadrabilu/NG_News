@@ -1,6 +1,5 @@
 package com.rabilu.ngnews.ui
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,24 +19,25 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.rabilu.ngnews.network.api.Resource
 import com.rabilu.ngnews.ui.auth.AuthenticationViewModel
 import com.rabilu.ngnews.ui.destinations.HomeScreenDestination
 import com.rabilu.ngnews.ui.destinations.OnBoardingScreenOneDestination
+import com.rabilu.ngnews.ui.home.HomeScreen
 import com.rabilu.ngnews.ui.theme.Black40
 import com.rabilu.ngnews.ui.theme.BottomBarBackground
 import com.rabilu.ngnews.ui.theme.NGNewsTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import com.ramcosta.composedestinations.utils.currentDestinationAsState
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -117,7 +117,17 @@ class MainActivity : ComponentActivity() {
                         startRoute = if (launch) OnBoardingScreenOneDestination else HomeScreenDestination,
                         navGraph = NavGraphs.root,
                         navController = navController
-                    )
+                    ) {
+                        composable(HomeScreenDestination) {
+                            val newsViewModel = hiltViewModel<NewsViewModel>()
+                            val result =
+                                newsViewModel.newsList.collectAsState(Resource.Loading()).value
+                            HomeScreen(
+                                navigator = destinationsNavigator,
+                                resource = result
+                            )
+                        }
+                    }
                 }
             }
         }

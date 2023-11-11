@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -26,14 +25,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.AsyncImage
 import com.rabilu.ngnews.R
-import com.rabilu.ngnews.domain.model.News
+import com.rabilu.ngnews.domain.model.Article
 import com.rabilu.ngnews.ui.theme.Black40
 import com.rabilu.ngnews.ui.theme.BottomBarBackground
 import com.rabilu.ngnews.ui.theme.WhiteGrey
 
 @Composable
-fun NewsItem(modifier: Modifier = Modifier, news: News, index: Int = 0) {
+fun NewsItem(modifier: Modifier = Modifier, news: Article, index: Int = 0) {
     Column(
         modifier = modifier
             .background(BottomBarBackground)
@@ -46,7 +46,7 @@ fun NewsItem(modifier: Modifier = Modifier, news: News, index: Int = 0) {
         ) {
             val (image, header, divider, description) = createRefs()
 
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .constrainAs(image) {
                         top.linkTo(parent.top)
@@ -55,7 +55,7 @@ fun NewsItem(modifier: Modifier = Modifier, news: News, index: Int = 0) {
                         width = Dimension.fillToConstraints
                     },
                 contentScale = ContentScale.Crop,
-                painter = painterResource(id = R.drawable.rectangle_3),
+                model = news.urlToImage,
                 contentDescription = "Article Image"
             )
 
@@ -82,7 +82,7 @@ fun NewsItem(modifier: Modifier = Modifier, news: News, index: Int = 0) {
                     )
                 )
                 Text(
-                    text = news.headline,
+                    text = news.title,
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.background)
@@ -131,14 +131,5 @@ fun NewsItem(modifier: Modifier = Modifier, news: News, index: Int = 0) {
 @Composable
 fun NewsItemPreview() {
     Surface {
-        NewsItem(
-            news = News(
-                "1",
-                headline = "Mohbad: Naira Marley relseases last coversation with late singer, police arrest Sam Larry",
-                description = "Lorem ipsum dolor sit amet consectetur. Sodales nibh quam pulvinar nunc augue diam. Dui vel faucibus donec volutpat enim amet." +
-                        "Lorem ipsum dolor sit amet consectetur. Sodales nibh quam pulvinar nunc augue .",
-                imageUrl = ""
-            ),
-        )
     }
 }
