@@ -1,10 +1,12 @@
 package com.rabilu.ngnews.di
 
 import android.app.Application
+import androidx.room.Room
 import com.rabilu.ngnews.data.DataStoreManager
+import com.rabilu.ngnews.data.local.NGNewsDB
+import com.rabilu.ngnews.data.remote.api.NGnewService
 import com.rabilu.ngnews.data.respository.NewsRepositoryImp
 import com.rabilu.ngnews.domain.repository.NewsRepository
-import com.rabilu.ngnews.network.api.NGnewService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,6 +38,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNewsRepository(nGnewService: NGnewService): NewsRepository =
-        NewsRepositoryImp(nGnewService)
+    fun provideNewsRepository(nGnewService: NGnewService, locaDB: NGNewsDB): NewsRepository =
+        NewsRepositoryImp(nGnewService, locaDB)
+
+    @Singleton
+    @Provides
+    fun provideNgsNewsDB(context: Application): NGNewsDB =
+        Room.databaseBuilder(context, NGNewsDB::class.java, "ng_news")
+            .fallbackToDestructiveMigration()
+            .build()
 }

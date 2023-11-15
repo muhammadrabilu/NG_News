@@ -1,10 +1,10 @@
 package com.rabilu.ngnews.ui.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -53,7 +52,8 @@ fun NewsItem(modifier: Modifier = Modifier, news: Article, index: Int = 0) {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         width = Dimension.fillToConstraints
-                    },
+                    }
+                    .height(200.dp),
                 contentScale = ContentScale.Crop,
                 model = news.urlToImage,
                 contentDescription = "Article Image"
@@ -62,11 +62,12 @@ fun NewsItem(modifier: Modifier = Modifier, news: Article, index: Int = 0) {
             Column(modifier = Modifier
                 .constrainAs(header) {
                     top.linkTo(image.bottom, margin = (-64).dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
                 }
-                .padding(horizontal = 32.dp)) {
+                .padding(horizontal = 32.dp)
+            ) {
                 Text(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -82,7 +83,7 @@ fun NewsItem(modifier: Modifier = Modifier, news: Article, index: Int = 0) {
                     )
                 )
                 Text(
-                    text = news.title,
+                    text = news.title.toString(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.background)
@@ -113,7 +114,7 @@ fun NewsItem(modifier: Modifier = Modifier, news: Article, index: Int = 0) {
                         end.linkTo(parent.end)
                     }
                     .padding(horizontal = 24.dp, vertical = 16.dp),
-                text = news.description,
+                text = news.description.toString(),
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontFamily = FontFamily(Font(R.font.times)),

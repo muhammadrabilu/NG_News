@@ -1,10 +1,11 @@
 package com.rabilu.ngnews.domain.repository
 
-import com.rabilu.ngnews.domain.model.NewsResponse
-import com.rabilu.ngnews.network.api.Resource
+import com.rabilu.ngnews.data.remote.api.Resource
+import com.rabilu.ngnews.domain.model.Article
 import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
 
-    fun getAllNews(query: String? = null): Flow<Resource<NewsResponse>>
+    suspend fun networkGetAllNews(query: String? = null)
+    fun getAllNews(): Flow<Resource<List<Article>>>
 }

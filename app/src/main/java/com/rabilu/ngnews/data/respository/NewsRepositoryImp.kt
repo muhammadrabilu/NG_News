@@ -1,30 +1,57 @@
 package com.rabilu.ngnews.data.respository
 
 import android.util.Log
-import com.rabilu.ngnews.domain.model.NewsResponse
+import androidx.room.withTransaction
+import com.rabilu.ngnews.data.local.NGNewsDB
+import com.rabilu.ngnews.data.model.NewsMapper
+import com.rabilu.ngnews.data.remote.api.NGnewService
+import com.rabilu.ngnews.data.remote.api.Resource
+import com.rabilu.ngnews.domain.model.Article
 import com.rabilu.ngnews.domain.repository.NewsRepository
-import com.rabilu.ngnews.network.api.NGnewService
-import com.rabilu.ngnews.network.api.Resource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class NewsRepositoryImp @Inject constructor(private val nGnewService: NGnewService) :
-    NewsRepository {
-    override fun getAllNews(query: String?): Flow<Resource<NewsResponse>> = flow {
+class NewsRepositoryImp @Inject constructor(
+    private val nGnewService: NGnewService, val localDB: NGNewsDB
+) : NewsRepository {
+
+    val newsDao = localDB.newsDao()
+    private val newsState = MutableStateFlow<Resource<List<Article>>>(Resource.Loading())
+
+    override suspend fun networkGetAllNews(query: String?) {
+        newsState.value = Resource.Loading(
+            data = NewsMapper().listMapFromEntity(
+                newsDao.getAllNews().first()
+            )
+        )
         try {
-            emit(Resource.Loading())
             val resopons =
                 if (query != null) nGnewService.getAllNews(query) else nGnewService.getAllNews()
-            if (resopons.isSuccessful) {
-                emit(Resource.Success(resopons.body()))
+            if (resopons.isSuccessful && resopons.body() != null) {
+                localDB.withTransaction {
+                    newsDao.deleteAll()
+                    newsDao.saveAll(NewsMapper().listMapFromDomain(resopons.body()!!.articles))
+                }
+                newsState.value = Resource.Success(
+                    data = NewsMapper().listMapFromEntity(
+                        newsDao.getAllNews().first()
+                    )
+                )
             }
-            Log.d("TAG", "getAllNews: ${resopons.errorBody()}")
-        } catch (e: Exception) {
-            Log.d("TAG", "getAllNews: ${e.localizedMessage}")
-            emit(Resource.Error(errorMessage = e.localizedMessage))
-        }
 
+        } catch (e: Exception) {
+            Log.e("TAG", "getAllNews: ${e.localizedMessage}")
+            newsState.value = Resource.Error(
+                data = NewsMapper().listMapFromEntity(
+                    newsDao.getAllNews().first()
+                ), errorMessage = e.localizedMessage
+            )
+
+        }
     }
+
+    override fun getAllNews(): Flow<Resource<List<Article>>> = newsState
 
 }

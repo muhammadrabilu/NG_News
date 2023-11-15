@@ -2,8 +2,10 @@ package com.rabilu.ngnews.ui.home
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,10 +14,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -40,44 +47,54 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.rabilu.ngnews.R
+import com.rabilu.ngnews.data.remote.api.Resource
+import com.rabilu.ngnews.domain.model.Article
 import com.rabilu.ngnews.domain.model.NewsResponse
-import com.rabilu.ngnews.network.api.Resource
-import com.rabilu.ngnews.ui.destinations.HomeScreenDestination
+import com.rabilu.ngnews.ui.destinations.DetailsScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 @Destination
 fun HomeScreen(
-    navigator: DestinationsNavigator, resource: Resource<NewsResponse>
+    navigator: DestinationsNavigator,
+    resource: Resource<List<Article>>,
+    refresh: () -> Unit
 ) {
-    var selectedScreen by remember { mutableStateOf(HomeScreenDestination) }
     val state = rememberLazyListState()
     val configuration = LocalConfiguration.current
-    var newsList by remember {
-        mutableStateOf(NewsResponse().articles)
-    }
+    var newsList by remember { mutableStateOf(NewsResponse().articles) }
     val context = LocalContext.current
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
+    val refreshState = rememberPullRefreshState(refreshing = isLoading, onRefresh = { refresh() })
     LaunchedEffect(resource) {
-
+        if (resource.data != null) {
+            newsList = resource.data
+        }
         when (resource) {
+
             is Resource.Error -> {
-                Log.d("TAG", "HomeScreen: error ${resource.errorMessage}")
+                Log.e("TAG", "HomeScreen: error ${resource.errorMessage}")
+                isLoading = false
+                Toast.makeText(context, resource.errorMessage, Toast.LENGTH_SHORT).show()
             }
 
             is Resource.Loading -> {
-                Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
+                isLoading = true
             }
 
             is Resource.Success -> {
-                Log.d("TAG", "HomeScreen: ${resource.data}")
-                if (resource.data != null)
-                    newsList = resource.data.articles
+                isLoading = false
+                if (resource.data != null) newsList = resource.data
             }
         }
-
     }
 
     Surface {
@@ -145,24 +162,49 @@ fun HomeScreen(
                     )
                 )
             }
-            LazyRow(
-                Modifier.wrapContentHeight(),
-                verticalAlignment = Alignment.CenterVertically,
-                state = state,
 
+            ConstraintLayout(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pullRefresh(refreshState)
+                    .verticalScroll(state = rememberScrollState())
+            ) {
+                val (newRowList, loadingIndicator) = createRefs()
+                LazyRow(
+                    modifier = Modifier.constrainAs(newRowList) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                        width = Dimension.fillToConstraints
+                        height = Dimension.fillToConstraints
+                    },
+                    verticalAlignment = Alignment.CenterVertically,
+                    state = state,
+                    contentPadding = PaddingValues(16.dp)
                 ) {
-                itemsIndexed(newsList) { index, item ->
-                    NewsItem(
-                        news = item,
-                        index = index,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxHeight()
-                            .width(configuration.screenWidthDp.dp - 72.dp)
-                    )
+                    itemsIndexed(newsList) { index, item ->
+                        NewsItem(
+                            news = item,
+                            index = index + 1,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp, vertical = 16.dp)
+                                .fillMaxHeight()
+                                .width(configuration.screenWidthDp.dp - 72.dp)
+                                .clickable {
+                                    navigator.navigate(DetailsScreenDestination(item))
+                                }
+                        )
+                    }
                 }
+                PullRefreshIndicator(isLoading,
+                    refreshState,
+                    modifier = Modifier.constrainAs(loadingIndicator) {
+                        top.linkTo(newRowList.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    })
             }
-
         }
     }
 }
@@ -170,5 +212,5 @@ fun HomeScreen(
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(EmptyDestinationsNavigator, Resource.Success())
+    HomeScreen(EmptyDestinationsNavigator, Resource.Success(), refresh = {})
 }

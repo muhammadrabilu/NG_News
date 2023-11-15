@@ -1,23 +1,27 @@
 package com.rabilu.ngnews.domain.model
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
+@Parcelize
 data class Article(
     @SerializedName("author")
-    val author: String,
+    val author: String? = null,
     @SerializedName("content")
-    val content: String,
+    val content: String? = null,
     @SerializedName("description")
-    val description: String,
+    val description: String? = null,
     @SerializedName("publishedAt")
-    val publishedAt: String,
+    val publishedAt: String? = null,
     @SerializedName("source")
-    val source: Source,
+    val source: @RawValue Source? = null,
     @SerializedName("title")
-    val title: String,
+    val title: String? = null,
     @SerializedName("url")
-    val url: String,
+    val url: String? = null,
     @SerializedName("urlToImage")
-    val urlToImage: Any
-)
+    val urlToImage: String? = null
+) : Parcelable

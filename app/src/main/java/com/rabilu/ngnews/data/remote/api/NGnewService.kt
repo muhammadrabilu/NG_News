@@ -1,4 +1,4 @@
-package com.rabilu.ngnews.network.api
+package com.rabilu.ngnews.data.remote.api
 
 import com.rabilu.ngnews.domain.model.NewsResponse
 import retrofit2.Response

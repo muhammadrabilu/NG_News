@@ -1,4 +1,4 @@
-package com.rabilu.ngnews.network.api
+package com.rabilu.ngnews.data.remote.api
 
 sealed class Resource<T>(
     val data: T? = null,

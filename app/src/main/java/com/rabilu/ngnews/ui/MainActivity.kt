@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import com.rabilu.ngnews.network.api.Resource
+import com.rabilu.ngnews.data.remote.api.Resource
 import com.rabilu.ngnews.ui.auth.AuthenticationViewModel
 import com.rabilu.ngnews.ui.destinations.HomeScreenDestination
 import com.rabilu.ngnews.ui.destinations.OnBoardingScreenOneDestination
@@ -69,8 +69,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
                     AnimatedVisibility(visible = showBottomBar) {
                         BottomAppBar(
-                            containerColor = BottomBarBackground,
-                            contentColor = Black40
+                            containerColor = BottomBarBackground, contentColor = Black40
                         ) {
                             NavigationBarItem(
                                 selected = false,
@@ -86,28 +85,22 @@ class MainActivity : ComponentActivity() {
 
                                 )
                             )
-                            NavigationBarItem(selected = false, onClick = { /*TODO*/ },
-                                icon = {
-                                    Icon(
-                                        imageVector = Icons.Rounded.BookmarkBorder,
-                                        contentDescription = "Saved Screen"
-                                    )
-                                }, label = {
-                                    Text(text = "Saved")
-                                }
-                            )
-                            NavigationBarItem(
-                                selected = false,
-                                onClick = { /*TODO*/ },
-                                label = {
-                                    Text(text = "Settings")
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector = Icons.Rounded.Settings,
-                                        contentDescription = "Settings Screen"
-                                    )
-                                })
+                            NavigationBarItem(selected = false, onClick = { /*TODO*/ }, icon = {
+                                Icon(
+                                    imageVector = Icons.Rounded.BookmarkBorder,
+                                    contentDescription = "Saved Screen"
+                                )
+                            }, label = {
+                                Text(text = "Saved")
+                            })
+                            NavigationBarItem(selected = false, onClick = { /*TODO*/ }, label = {
+                                Text(text = "Settings")
+                            }, icon = {
+                                Icon(
+                                    imageVector = Icons.Rounded.Settings,
+                                    contentDescription = "Settings Screen"
+                                )
+                            })
                         }
                     }
 
@@ -124,7 +117,8 @@ class MainActivity : ComponentActivity() {
                                 newsViewModel.newsList.collectAsState(Resource.Loading()).value
                             HomeScreen(
                                 navigator = destinationsNavigator,
-                                resource = result
+                                resource = result,
+                                refresh = newsViewModel::fetchNews
                             )
                         }
                     }
