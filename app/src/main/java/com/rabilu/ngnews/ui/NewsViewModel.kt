@@ -2,6 +2,7 @@ package com.rabilu.ngnews.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rabilu.ngnews.domain.model.Article
 import com.rabilu.ngnews.domain.use_case.GetNewUseCase
 import com.rabilu.ngnews.domain.use_case.LocalDBGetNewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewsViewModel @Inject constructor(
     val getNewUseCase: GetNewUseCase,
-    localDBGetNewsUseCase: LocalDBGetNewsUseCase
+    localDBGetNewsUseCase: LocalDBGetNewsUseCase,
 ) : ViewModel() {
     val newsList = localDBGetNewsUseCase()
 
@@ -20,6 +21,7 @@ class NewsViewModel @Inject constructor(
             getNewUseCase()
         }
     }
+
 
     init {
         fetchNews()

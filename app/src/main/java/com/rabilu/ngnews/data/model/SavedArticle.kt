@@ -1,10 +1,13 @@
 package com.rabilu.ngnews.data.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
-@Entity(tableName = "news")
-data class News(
+@Entity(tableName = "saved_article")
+@Parcelize
+data class SavedArticle(
     @PrimaryKey(autoGenerate = false)
     val publishedAt: String,
     val author: String? = null,
@@ -15,4 +18,4 @@ data class News(
     val url: String? = null,
     val urlToImage: String? = null,
     val isSaved: Boolean = false
-)
+) : Parcelable

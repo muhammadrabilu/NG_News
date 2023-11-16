@@ -23,5 +23,6 @@ data class Article(
     @SerializedName("url")
     val url: String? = null,
     @SerializedName("urlToImage")
-    val urlToImage: String? = null
+    val urlToImage: String? = null,
+    var isSaved: Boolean = false
 ) : Parcelable

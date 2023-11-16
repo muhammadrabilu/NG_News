@@ -8,4 +8,6 @@ interface NewsRepository {
 
     suspend fun networkGetAllNews(query: String? = null)
     fun getAllNews(): Flow<Resource<List<Article>>>
+
+    suspend fun saveArticle(article: Article)
 }

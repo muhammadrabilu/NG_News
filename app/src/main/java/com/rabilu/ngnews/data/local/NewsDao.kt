@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.rabilu.ngnews.data.model.News
 import kotlinx.coroutines.flow.Flow
 
@@ -18,4 +19,7 @@ interface NewsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAll(news: List<News>)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveArticle(news: News)
 }

@@ -3,9 +3,10 @@ package com.rabilu.ngnews.data.respository
 import android.util.Log
 import androidx.room.withTransaction
 import com.rabilu.ngnews.data.local.NGNewsDB
-import com.rabilu.ngnews.data.model.NewsMapper
 import com.rabilu.ngnews.data.remote.api.NGnewService
 import com.rabilu.ngnews.data.remote.api.Resource
+import com.rabilu.ngnews.data.util.NewsMapper
+import com.rabilu.ngnews.data.util.SavedArticleMapper
 import com.rabilu.ngnews.domain.model.Article
 import com.rabilu.ngnews.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +18,8 @@ class NewsRepositoryImp @Inject constructor(
     private val nGnewService: NGnewService, val localDB: NGNewsDB
 ) : NewsRepository {
 
-    val newsDao = localDB.newsDao()
+    private val newsDao = localDB.newsDao()
+    private val savedArticleDao = localDB.savedArticleDao()
     private val newsState = MutableStateFlow<Resource<List<Article>>>(Resource.Loading())
 
     override suspend fun networkGetAllNews(query: String?) {
@@ -53,5 +55,9 @@ class NewsRepositoryImp @Inject constructor(
     }
 
     override fun getAllNews(): Flow<Resource<List<Article>>> = newsState
+    override suspend fun saveArticle(article: Article) {
+        Log.d("TAG", "saveArticle: ${article.isSaved}")
+        savedArticleDao.saveArticle(SavedArticleMapper().mapFromDomain(article))
+    }
 
 }

@@ -6,7 +6,9 @@ import com.rabilu.ngnews.data.DataStoreManager
 import com.rabilu.ngnews.data.local.NGNewsDB
 import com.rabilu.ngnews.data.remote.api.NGnewService
 import com.rabilu.ngnews.data.respository.NewsRepositoryImp
+import com.rabilu.ngnews.data.respository.SavedArticleImpl
 import com.rabilu.ngnews.domain.repository.NewsRepository
+import com.rabilu.ngnews.domain.repository.SavedArticleRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,6 +42,11 @@ object AppModule {
     @Singleton
     fun provideNewsRepository(nGnewService: NGnewService, locaDB: NGNewsDB): NewsRepository =
         NewsRepositoryImp(nGnewService, locaDB)
+
+    @Provides
+    @Singleton
+    fun provideSavedArticleRepository(locaDB: NGNewsDB): SavedArticleRepository =
+        SavedArticleImpl(locaDB)
 
     @Singleton
     @Provides
