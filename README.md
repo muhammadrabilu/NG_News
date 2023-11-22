@@ -1,10 +1,10 @@
 # NgNews
 
-NgNews is a news app that allows users to stay informed with the latest news articles. It leverages the MVVM pattern, clean code principles, and Hilt for dependency injection. The app is designed with offline capabilities, enabling users to access previously read news even without an internet connection.
+NgNews is a news app that allows users to stay informed with the latest news articles. It leverages the MVVM pattern, clean code principles, and Hilt for dependency injection. The app is designed with offline capabilities, enabling users to access previously read news even without an internet connection and also bookmark a news for easey read later.
 
 ## Features
 
-- **MVVM Architecture:** NgNews follows the Model-View-ViewModel architectural pattern, providing a modular and maintainable codebase.
+- **MVVM Architecture:** NGNews follows the Model-View-ViewModel architectural pattern, providing a modular and maintainable codebase.
 - **Clean Code:** The project adheres to clean code principles, promoting readability, maintainability, and scalability.
 - **Offline Capability:** Users can read previously accessed news articles even without an active internet connection.
 - **News API Integration:** NgNews utilizes the open news API from [newsapi.org](https://newsapi.org/) to fetch the latest news articles.
@@ -21,7 +21,7 @@ NgNews is a news app that allows users to stay informed with the latest news art
 
 Follow these steps to set up the NgNews project locally:
 
-1. Clone the repository: `git clone https://github.com/muhammadrabilu/.git`
+1. Clone the repository: `git clone https://github.com/muhammadrabilu/NG_News.git`
 2. Open the project in Android Studio.
 3. Build and run the app on an emulator or physical device.
 
