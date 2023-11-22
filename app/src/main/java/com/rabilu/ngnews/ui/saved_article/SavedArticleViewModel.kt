@@ -1,4 +1,4 @@
-package com.rabilu.ngnews.ui
+package com.rabilu.ngnews.ui.saved_article
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,7 +20,7 @@ class SavedArticleViewModel @Inject constructor(
     private val deleteSavedArticleUseCase: DeleteSavedArticleUseCase
 ) : ViewModel() {
 
-    val allSavedArticles = getAllSavedArticleUseCase
+    var allSavedArticles = getAllSavedArticleUseCase()
 
     var saveArticle = MutableStateFlow(Article())
     fun getSavedArticle(id: String) {
@@ -41,5 +41,9 @@ class SavedArticleViewModel @Inject constructor(
         viewModelScope.launch {
             deleteSavedArticleUseCase(article)
         }
+    }
+
+    init {
+        allSavedArticles = getAllSavedArticleUseCase()
     }
 }

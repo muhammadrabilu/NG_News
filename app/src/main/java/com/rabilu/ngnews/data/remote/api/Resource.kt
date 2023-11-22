@@ -8,3 +8,4 @@ sealed class Resource<T>(
     class Loading<T>(data: T? = null) : Resource<T>(data)
     class Error<T>(data: T? = null, errorMessage: String?) : Resource<T>(data, errorMessage)
 }
+
