@@ -27,6 +27,6 @@ Follow these steps to set up the NgNews project locally:
 
 ## Configuration
 
-To use NgNews with your own API key from [newsapi.org](https://newsapi.org/), update the `API_KEY` on the @    @Headers("x-api-key: YOUR_API_KEY")
+To use NgNews with your own API key from [newsapi.org](https://newsapi.org/), update the `API_KEY` on the @Headers("x-api-key: YOUR_API_KEY")
  variable in the `NGnewService.kt` file.
 
