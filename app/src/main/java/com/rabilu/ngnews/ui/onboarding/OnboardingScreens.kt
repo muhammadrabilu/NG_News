@@ -37,7 +37,6 @@ import com.rabilu.ngnews.ui.destinations.OnBoardingScreenThreeDestination
 import com.rabilu.ngnews.ui.destinations.OnBoardingScreenTwoDestination
 import com.rabilu.ngnews.ui.theme.NGNewsTheme
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.CoroutineScope
@@ -45,73 +44,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 
-//@Composable
-//@Destination
-//@OnboardingNavGraph
-//fun OnboardingScreenContainer(
-//    navigator: DestinationsNavigator
-//) {
-//    var showScreenIndicator by remember {
-//        mutableStateOf(false)
-//    }
-//    val navController = rememberNavController()
-//    val currentDestination = navController.currentDestinationAsState().value
-//
-//    navController.addOnDestinationChangedListener { _, destination, _ ->
-//        Log.d(
-//            "TAG", "OnboardingScreenContainer: ${destination.route}"
-//        )
-//        showScreenIndicator = destination.route != OnBoardingScreenOneDestination.route
-//    }
-//    Surface {
-//        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-//            val (indicator, navhost) = createRefs()
-//
-//            DestinationsNavHost(navGraph = NavGraphs.root,
-//                navController = navController,
-//                modifier = Modifier.constrainAs(navhost) {
-//                    top.linkTo(parent.top)
-//                    start.linkTo(parent.start)
-//                    end.linkTo(parent.end)
-//                    bottom.linkTo(indicator.top)
-//                    width = Dimension.fillToConstraints
-//                })
-//
-////            if (showScreenIndicator) {
-////                Row(modifier = Modifier
-////                    .padding(start = 32.dp, end = 32.dp, bottom = 40.dp)
-////                    .constrainAs(indicator) {
-////                        bottom.linkTo(parent.bottom)
-////                        start.linkTo(parent.start)
-////                        end.linkTo(parent.end)
-////                    }) {
-////                    CurrentScreenIndicator(
-////                        isCurrent = currentDestination?.route == OnBoardingScreenTwoDestination.route
-////                    )
-////
-////                    CurrentScreenIndicator(
-////                        modifier = Modifier.padding(horizontal = 16.dp),
-////                        isCurrent = currentDestination?.route == OnBoardingScreenThreeDestination.route
-////                    )
-////
-////                    CurrentScreenIndicator(
-////                        isCurrent = currentDestination?.route == OnBoardingScreenFourDestination.route
-////                    )
-////                }
-////            }
-//        }
-//    }
-//}
-
-//@Preview
-//@Composable
-//fun OnboardingScreensContainerPreview() {
-//    OnboardingScreenContainer(EmptyDestinationsNavigator)
-//}
-
 @Composable
 @Destination
-@RootNavGraph(start = true)
 fun OnBoardingScreenOne(
     navigator: DestinationsNavigator
 ) {

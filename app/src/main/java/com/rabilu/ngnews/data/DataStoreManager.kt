@@ -1,13 +1,13 @@
 package com.rabilu.ngnews.data
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.map
 
 class DataStoreManager(
     private val context: Context
@@ -22,12 +22,16 @@ class DataStoreManager(
     }
 
     suspend fun getFetchData() {
-        context.dataStore.data
-            .map { preferences ->
-                preferences[FIRST_TIME_LAUNCH] ?: true
-            }.collect {
-                firstLaunch.value = it
-            }
+        Log.d("TAG", "getFetchData: called")
+        context.dataStore.data.collect { preferences ->
+            Log.d("TAG", "getFetchData: ${preferences[FIRST_TIME_LAUNCH]}")
+            firstLaunch.value = preferences[FIRST_TIME_LAUNCH] ?: true
+        }
+//        context.dataStore.data
+//            .map { preferences ->
+//                Log.d("TAG", "getFetchData: ${preferences[FIRST_TIME_LAUNCH]}")
+//                firstLaunch.value = preferences[FIRST_TIME_LAUNCH] ?: true
+//            }
     }
 
     suspend fun updateLaunchStatus() {

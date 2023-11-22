@@ -1,8 +1,10 @@
 package com.rabilu.ngnews.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -30,7 +32,6 @@ import androidx.navigation.compose.rememberNavController
 import com.rabilu.ngnews.data.remote.api.Resource
 import com.rabilu.ngnews.ui.auth.AuthenticationViewModel
 import com.rabilu.ngnews.ui.destinations.HomeScreenDestination
-import com.rabilu.ngnews.ui.destinations.OnBoardingScreenOneDestination
 import com.rabilu.ngnews.ui.destinations.SavedArticleScreenDestination
 import com.rabilu.ngnews.ui.destinations.SettingScreenDestination
 import com.rabilu.ngnews.ui.home.HomeScreen
@@ -47,20 +48,21 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private val authenticationViewModel by viewModels<AuthenticationViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val launch = authenticationViewModel.launch
         setContent {
             NGNewsTheme {
                 // A surface container using the 'background' color from the theme
                 val navController = rememberNavController()
                 val currenDestination = navController.currentDestinationAsState().value
-                val authenticationViewModel = hiltViewModel<AuthenticationViewModel>()
-                val launch = authenticationViewModel.launch.value
                 var showBottomBar by remember {
                     mutableStateOf(false)
                 }
-                LaunchedEffect(key1 = currenDestination) {
+                Log.d("TAG", "onCreate: ${launch.value}")
+                LaunchedEffect(currenDestination) {
                     showBottomBar = when (navController.currentDestination?.route) {
                         HomeScreenDestination.route -> true
                         SavedArticleScreenDestination.route -> true
@@ -125,9 +127,10 @@ class MainActivity : ComponentActivity() {
                     }
 
                 }) {
+                    hiltViewModel<AuthenticationViewModel>()
+
                     DestinationsNavHost(
                         modifier = Modifier.padding(it),
-                        startRoute = if (launch) OnBoardingScreenOneDestination else HomeScreenDestination,
                         navGraph = NavGraphs.root,
                         navController = navController
                     ) {
@@ -141,7 +144,6 @@ class MainActivity : ComponentActivity() {
                                 refresh = newsViewModel::fetchNews
                             )
                         }
-
                         composable(SavedArticleScreenDestination) {
                             val saveArtiViewModel = hiltViewModel<SavedArticleViewModel>()
                             val savedArticles = saveArtiViewModel.allSavedArticles.collectAsState(
@@ -152,6 +154,14 @@ class MainActivity : ComponentActivity() {
                                 savedArticles
                             )
                         }
+//                        composable(LaunchScreenMediatorDestination) {
+//                            hiltViewModel<AuthenticationViewModel>()
+//                            LaunchScreenMediator(
+//                                fistLaunch = launch.value,
+//                                navigator = destinationsNavigator
+//                            )
+//                        }
+
                     }
                 }
             }
